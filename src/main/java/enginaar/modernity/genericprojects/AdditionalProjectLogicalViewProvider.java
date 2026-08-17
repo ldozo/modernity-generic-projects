@@ -1,4 +1,4 @@
-package enginaar.modernity.additionalprojects;
+package enginaar.modernity.genericprojects;
 
 import org.netbeans.spi.project.ui.LogicalViewProvider;
 import org.openide.nodes.Node;

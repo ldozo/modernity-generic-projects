@@ -1,4 +1,4 @@
-package enginaar.modernity.additionalprojects;
+package enginaar.modernity.genericprojects;
 
 import org.openide.nodes.AbstractNode;
 import org.openide.nodes.Children;

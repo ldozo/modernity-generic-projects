@@ -1,4 +1,4 @@
-package enginaar.modernity.additionalprojects;
+package enginaar.modernity.genericprojects;
 
 import java.beans.PropertyChangeListener;
 import javax.swing.Icon;

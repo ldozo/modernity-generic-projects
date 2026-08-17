@@ -1,4 +1,4 @@
-package enginaar.modernity.additionalprojects;
+package enginaar.modernity.genericprojects;
 
 import java.io.IOException;
 import java.io.OutputStream;

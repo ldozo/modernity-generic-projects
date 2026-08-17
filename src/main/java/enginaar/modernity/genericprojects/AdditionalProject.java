@@ -1,4 +1,4 @@
-package enginaar.modernity.additionalprojects;
+package enginaar.modernity.genericprojects;
 
 import org.netbeans.api.project.Project;
 import org.openide.filesystems.FileObject;

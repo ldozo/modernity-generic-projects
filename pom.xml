@@ -7,7 +7,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>enginaar-modernity</groupId>
-    <artifactId>additional-projects</artifactId>
+    <artifactId>generic-projects</artifactId>
     <version>1.0-SNAPSHOT</version>
 
     <packaging>nbm</packaging>

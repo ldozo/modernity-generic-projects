@@ -1,4 +1,4 @@
-package enginaar.modernity.additionalprojects;
+package enginaar.modernity.genericprojects;
 
 import java.io.IOException;
 import org.openide.filesystems.FileObject;
