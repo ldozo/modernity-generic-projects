@@ -49,17 +49,22 @@ public class GenericProjectInformation implements ProjectInformation {
      */
     @Override
     public Icon getIcon() {
-        Icon gitIcon = ImageUtilities.loadImageIcon(
-                "enginaar/modernity/genericprojects/git-icon_16.svg",
-                true);
-
-        if (gitIcon != null) {
-            return gitIcon;
+        if (isGit()) {
+            Icon gitIcon = ImageUtilities.loadImageIcon(
+                    "enginaar/modernity/genericprojects/git-icon_16.svg",
+                    false);
+            if (gitIcon != null) {
+                return gitIcon;
+            }
         }
 
         return ImageUtilities.loadImageIcon(
                 "org/netbeans/modules/project/ui/resources/projectTab.png",
                 true);
+    }
+
+    private boolean isGit() {
+        return project.getProjectDirectory().getFileObject(".git") != null;
     }
 
     @Override

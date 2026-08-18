@@ -105,6 +105,8 @@ public class GenericProjectFactory
         content.add(new GenericProjectInformation(project));
         content.add(new GenericProjectOpenedHook(project));
         content.add(new GenericProjectLogicalViewProvider(project));
+        content.add(new GenericProjectOperations(project));
+        content.add(new GenericProjectActionProvider(project));
 
         return project;
     }
@@ -124,6 +126,8 @@ public class GenericProjectFactory
         content.add(new GenericProjectInformation(project));
         content.add(new GenericProjectOpenedHook(project));
         content.add(new GenericProjectLogicalViewProvider(project));
+        content.add(new GenericProjectOperations(project));
+        content.add(new GenericProjectActionProvider(project));
 
         return project;
     }

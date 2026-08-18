@@ -18,6 +18,8 @@ import org.openide.awt.ActionRegistration;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.util.RequestProcessor;
+import org.openide.windows.TopComponent;
+import org.openide.windows.WindowManager;
 
 /**
  * Opens an arbitrary folder as a NetBeans project.
@@ -90,9 +92,7 @@ public final class OpenFolderAction
 
                 if (project != null) {
                     LOG.log(Level.INFO, "Opening existing project: {0}", folder.getPath());
-                    SwingUtilities.invokeLater(() -> {
-                        OpenProjects.getDefault().open(new Project[]{project}, true);
-                    });
+                    openProject(project);
                     return;
                 }
 
@@ -104,9 +104,7 @@ public final class OpenFolderAction
                     ProjectManager.getDefault().clearNonProjectCache();
                     Project newProject = ProjectManager.getDefault().findProject(folder);
                     if (newProject != null) {
-                        SwingUtilities.invokeLater(() -> {
-                            OpenProjects.getDefault().open(new Project[]{newProject}, true);
-                        });
+                        openProject(newProject);
                     }
                     return;
                 }
@@ -117,9 +115,7 @@ public final class OpenFolderAction
                     ProjectManager.getDefault().clearNonProjectCache();
                     Project newProject = ProjectManager.getDefault().findProject(folder);
                     if (newProject != null) {
-                        SwingUtilities.invokeLater(() -> {
-                            OpenProjects.getDefault().open(new Project[]{newProject}, true);
-                        });
+                        openProject(newProject);
                     }
                 }
 
@@ -132,6 +128,16 @@ public final class OpenFolderAction
                             "Error",
                             JOptionPane.ERROR_MESSAGE);
                 });
+            }
+        });
+    }
+
+    private void openProject(Project project) {
+        SwingUtilities.invokeLater(() -> {
+            OpenProjects.getDefault().open(new Project[]{project}, true);
+            TopComponent projectsTab = WindowManager.getDefault().findTopComponent("projectTabLogical_tc");
+            if (projectsTab != null) {
+                projectsTab.requestActive();
             }
         });
     }
