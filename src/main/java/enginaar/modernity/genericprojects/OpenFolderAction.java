@@ -24,11 +24,12 @@ import org.openide.util.RequestProcessor;
         id = "enginaar.modernity.genericprojects.OpenFolderAction"
 )
 @ActionRegistration(
-        displayName = "Open Folder..."
+        displayName = "Open Folder...",
+        iconBase = "enginaar/modernity/genericprojects/open-folder-icon_16.svg"        
 )
 @ActionReference(
         path = "Menu/File",
-        position = 5
+        position = 410
 )
 public final class OpenFolderAction
         implements ActionListener {
