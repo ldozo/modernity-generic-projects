@@ -1,12 +1,14 @@
 package enginaar.modernity.genericprojects;
 
-import java.awt.HeadlessException;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectManager;
 import org.netbeans.api.project.ui.OpenProjects;
@@ -15,20 +17,28 @@ import org.openide.awt.ActionReference;
 import org.openide.awt.ActionRegistration;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
+import org.openide.util.RequestProcessor;
 
 @ActionID(
         category = "File",
-        id = "ngr.modernity.additionalprojects.OpenFolderAction"
+        id = "enginaar.modernity.genericprojects.OpenFolderAction"
 )
 @ActionRegistration(
         displayName = "Open Folder..."
 )
 @ActionReference(
         path = "Menu/File",
-        position = 1450
+        position = 5
 )
 public final class OpenFolderAction
         implements ActionListener {
+
+    private static final Logger LOG = Logger.getLogger(OpenFolderAction.class.getName());
+    private static final RequestProcessor RP = new RequestProcessor("OpenFolderAction", 1);
+
+    public OpenFolderAction() {
+        LOG.log(Level.INFO, "OpenFolderAction instantiated - Action registered");
+    }
 
     @Override
     public void actionPerformed(ActionEvent e) {
@@ -46,104 +56,86 @@ public final class OpenFolderAction
             return;
         }
 
-        File selectedFolder
-                = chooser.getSelectedFile();
+        File selectedFolder = chooser.getSelectedFile();
 
-        FileObject folder
-                = FileUtil.toFileObject(selectedFolder);
+        RP.post(() -> {
+            FileObject folder = FileUtil.toFileObject(selectedFolder);
 
-        if (folder == null) {
-            return;
-        }
+            if (folder == null) {
+                LOG.log(Level.WARNING, "Selected folder is not a valid FileObject: {0}", selectedFolder);
+                return;
+            }
 
+            try {
+                Project project = ProjectManager.getDefault().findProject(folder);
+
+                if (project != null) {
+                    LOG.log(Level.INFO, "Opening existing project: {0}", folder.getPath());
+                    SwingUtilities.invokeLater(() -> {
+                        OpenProjects.getDefault().open(new Project[]{project}, true);
+                    });
+                    return;
+                }
+
+                final int choice = showOptionDialog();
+
+                if (choice == 0) {
+                    LOG.log(Level.INFO, "Creating temporary folder project: {0}", folder.getPath());
+                    FolderProjectMarker.create(folder);
+                    ProjectManager.getDefault().clearNonProjectCache();
+                    Project newProject = ProjectManager.getDefault().findProject(folder);
+                    if (newProject != null) {
+                        SwingUtilities.invokeLater(() -> {
+                            OpenProjects.getDefault().open(new Project[]{newProject}, true);
+                        });
+                    }
+                    return;
+                }
+
+                if (choice == 1) {
+                    LOG.log(Level.INFO, "Converting to permanent project: {0}", folder.getPath());
+                    ProjectConverter.convertToProject(folder);
+                    ProjectManager.getDefault().clearNonProjectCache();
+                    Project newProject = ProjectManager.getDefault().findProject(folder);
+                    if (newProject != null) {
+                        SwingUtilities.invokeLater(() -> {
+                            OpenProjects.getDefault().open(new Project[]{newProject}, true);
+                        });
+                    }
+                }
+
+            } catch (IOException | IllegalArgumentException ex) {
+                LOG.log(Level.SEVERE, "Failed to open folder: " + folder.getPath(), ex);
+                SwingUtilities.invokeLater(() -> {
+                    JOptionPane.showMessageDialog(
+                            null,
+                            ex.getLocalizedMessage(),
+                            "Error",
+                            JOptionPane.ERROR_MESSAGE);
+                });
+            }
+        });
+    }
+
+    private int showOptionDialog() {
+        final int[] result = new int[1];
         try {
-
-            Project project = ProjectManager
-                            .getDefault()
-                            .findProject(folder);
-
-            /*
-         * Zaten proje ise doğrudan aç.
-             */
-            if (project != null) {
-
-                OpenProjects.getDefault().open(
-                        new Project[]{project},
-                        true);
-
-                return;
-            }
-
-            /*
-         * Proje değil.
-             */
-            Object[] options = {
-                "Open As Folder",
-                "Convert To Project",
-                "Cancel"
-            };
-
-            int choice
-                    = JOptionPane.showOptionDialog(
-                            null,
-                            "This folder is not a NetBeans project.",
-                            "Open Folder",
-                            JOptionPane.DEFAULT_OPTION,
-                            JOptionPane.QUESTION_MESSAGE,
-                            null,
-                            options,
-                            options[0]);
-
-            if (choice == 0) {
-
-                FolderProjectMarker.create(folder);
-
-                ProjectManager.getDefault().clearNonProjectCache();
-
-                project = ProjectManager.getDefault().findProject(folder);
-
-                if (project != null) {
-
-                    OpenProjects.getDefault().open(
-                            new Project[]{project},
-                            true);
-                }
-
-                return;
-            }
-
-            /*
-             * Convert To Project
-             */
-            if (choice == 1) {
-
-                ProjectConverter.convertToProject(folder);
-
-                ProjectManager.getDefault()
-                        .clearNonProjectCache();
-
-                project = ProjectManager
-                        .getDefault()
-                        .findProject(folder);
-
-                if (project != null) {
-
-                    OpenProjects.getDefault().open(
-                            new Project[]{project},
-                            true);
-                }
-
-            }
-            /*
-             * Cancel
-             */
-
-        } catch (HeadlessException | IOException | IllegalArgumentException ex) {
-            JOptionPane.showMessageDialog(
-                    null,
-                    ex.getMessage(),
-                    "Error",
-                    JOptionPane.ERROR_MESSAGE);
+            SwingUtilities.invokeAndWait(() -> {
+                Object[] options = {"Open As Folder", "Convert To Project", "Cancel"};
+                result[0] = JOptionPane.showOptionDialog(
+                        null,
+                        "This folder is not a NetBeans project.",
+                        "Open Folder",
+                        JOptionPane.DEFAULT_OPTION,
+                        JOptionPane.QUESTION_MESSAGE,
+                        null,
+                        options,
+                        options[0]);
+            });
+        } catch (Exception ex) {
+            LOG.log(Level.WARNING, "Option dialog failed", ex);
+            result[0] = 2; // Cancel
         }
+        return result[0];
     }
 }

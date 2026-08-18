@@ -3,11 +3,11 @@ package enginaar.modernity.genericprojects;
 import org.openide.nodes.AbstractNode;
 import org.openide.nodes.Children;
 
-public class AdditionalProjectRootNode
+public class GenericProjectRootNode
         extends AbstractNode {
 
-    public AdditionalProjectRootNode(
-            AdditionalProject project) {
+    public GenericProjectRootNode(
+            GenericProject project) {
 
         super(Children.LEAF);
 

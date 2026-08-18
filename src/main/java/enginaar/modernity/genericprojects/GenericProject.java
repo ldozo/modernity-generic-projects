@@ -4,12 +4,12 @@ import org.netbeans.api.project.Project;
 import org.openide.filesystems.FileObject;
 import org.openide.util.Lookup;
 
-public class AdditionalProject implements Project {
+public class GenericProject implements Project {
 
     private final FileObject projectDirectory;
     private final Lookup lookup;
 
-    public AdditionalProject(
+    public GenericProject(
             FileObject projectDirectory,
             Lookup lookup) {
 

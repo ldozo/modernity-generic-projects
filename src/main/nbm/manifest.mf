@@ -1,3 +1,1 @@
-Manifest-Version: 1.0
-OpenIDE-Module-Localizing-Bundle: enginaar/modernity/git/Bundle.properties
-
+OpenIDE-Module-Install: enginaar/modernity/genericprojects/GenericProjectsModuleInstall.class

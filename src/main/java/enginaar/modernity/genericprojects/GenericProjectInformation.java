@@ -1,19 +1,18 @@
 package enginaar.modernity.genericprojects;
 
 import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 import javax.swing.Icon;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectInformation;
 import org.openide.util.ImageUtilities;
 
-public class AdditionalProjectInformation
-        implements ProjectInformation {
+public class GenericProjectInformation implements ProjectInformation {
 
-    private final AdditionalProject project;
+    private final GenericProject project;
+    private final PropertyChangeSupport pcs = new PropertyChangeSupport(this);
 
-    public AdditionalProjectInformation(
-            AdditionalProject project) {
-
+    public GenericProjectInformation(GenericProject project) {
         this.project = project;
     }
 
@@ -29,7 +28,6 @@ public class AdditionalProjectInformation
 
     @Override
     public Icon getIcon() {
-
         Icon gitIcon = ImageUtilities.loadImageIcon(
                 "org/netbeans/modules/git/resources/icons/repository.png",
                 true);
@@ -49,12 +47,12 @@ public class AdditionalProjectInformation
     }
 
     @Override
-    public void addPropertyChangeListener(
-            PropertyChangeListener listener) {
+    public void addPropertyChangeListener(PropertyChangeListener listener) {
+        pcs.addPropertyChangeListener(listener);
     }
 
     @Override
-    public void removePropertyChangeListener(
-            PropertyChangeListener listener) {
+    public void removePropertyChangeListener(PropertyChangeListener listener) {
+        pcs.removePropertyChangeListener(listener);
     }
 }
