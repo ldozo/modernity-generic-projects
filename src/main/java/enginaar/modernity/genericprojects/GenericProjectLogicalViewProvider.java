@@ -7,11 +7,26 @@ import org.openide.loaders.DataObjectNotFoundException;
 import org.openide.nodes.Node;
 import org.openide.filesystems.FileObject;
 
+/**
+ * {@link LogicalViewProvider} for {@link GenericProject}.
+ * <p>
+ * The logical view delegates to the standard {@link DataFolder} node of the
+ * wrapped directory, so the project tree simply reflects the folder contents
+ * using NetBeans' default data-object nodes. {@code findPath} locates the node
+ * corresponding to a given target file.
+ *
+ * @author Kenan Erarslan (kenan@enginaar.com)
+ */
 public class GenericProjectLogicalViewProvider
         implements LogicalViewProvider {
 
     private final GenericProject project;
 
+    /**
+     * Creates a logical view provider for the given project.
+     *
+     * @param project the generic project whose folder is shown
+     */
     public GenericProjectLogicalViewProvider(
             GenericProject project) {
 

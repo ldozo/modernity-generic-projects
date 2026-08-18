@@ -6,6 +6,15 @@ import java.util.logging.Logger;
 import org.netbeans.spi.project.ui.ProjectOpenedHook;
 import org.openide.filesystems.FileObject;
 
+/**
+ * {@link ProjectOpenedHook} for {@link GenericProject}.
+ * <p>
+ * On project close the temporary folder marker is removed, unless the folder
+ * has been permanently converted (i.e. it contains an {@code nbproject}
+ * directory).
+ *
+ * @author Kenan Erarslan (kenan@enginaar.com)
+ */
 public class GenericProjectOpenedHook
         extends ProjectOpenedHook {
 
@@ -13,6 +22,11 @@ public class GenericProjectOpenedHook
 
     private final GenericProject project;
 
+    /**
+     * Creates an opened hook for the given project.
+     *
+     * @param project the generic project whose lifecycle is observed
+     */
     public GenericProjectOpenedHook(GenericProject project) {
         this.project = project;
     }

@@ -8,13 +8,33 @@ import java.util.logging.Logger;
 import org.netbeans.api.project.ProjectManager;
 import org.openide.filesystems.FileObject;
 
+/**
+ * Converts a plain folder into a permanent NetBeans project.
+ * <p>
+ * Conversion writes a {@code nbproject/project.xml} descriptor whose project
+ * type is {@code enginaar.modernity.genericprojects}. Such projects are then
+ * recognized by {@link GenericProjectFactory} and can be reopened through the
+ * regular NetBeans project open flows.
+ *
+ * @author Kenan Erarslan (kenan@enginaar.com)
+ */
 public final class ProjectConverter {
 
     private static final Logger LOG = Logger.getLogger(ProjectConverter.class.getName());
 
+    /** The project type identifier written to {@code project.xml}. */
+    public static final String PROJECT_TYPE = "enginaar.modernity.genericprojects";
+
     private ProjectConverter() {
     }
 
+    /**
+     * Converts the given folder into a permanent NetBeans project.
+     *
+     * @param folder the folder to convert
+     * @throws IOException if the {@code nbproject/project.xml} file cannot be
+     *         created or written
+     */
     public static void convertToProject(FileObject folder) throws IOException {
         FileObject nbproject = folder.getFileObject("nbproject");
 
@@ -30,14 +50,12 @@ public final class ProjectConverter {
             LOG.log(Level.FINE, "Created project.xml: {0}", projectXml.getPath());
         }
 
-        String xml = """
-                <?xml version="1.0" encoding="UTF-8"?>
-                <project>
-                    <type>
-                        enginaar.modernity.genericprojects
-                    </type>
-                </project>
-                """;
+        String xml = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+                + "<project>\n"
+                + "    <type>\n"
+                + "        " + PROJECT_TYPE + "\n"
+                + "    </type>\n"
+                + "</project>\n";
 
         try (OutputStream out = projectXml.getOutputStream()) {
             out.write(xml.getBytes(StandardCharsets.UTF_8));

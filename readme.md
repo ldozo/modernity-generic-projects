@@ -1,6 +1,6 @@
-# Modernity Additional Projects
+# Modernity Generic Projects
 
-Modernity Additional Projects brings a lightweight, folder-centric workflow to Apache NetBeans.
+Modernity Generic Projects brings a lightweight, folder-centric workflow to Apache NetBeans.
 
 The plugin allows Git repositories and arbitrary folders to be opened as projects, making NetBeans more convenient for working with configuration repositories, infrastructure code, YAML files, scripts, documentation, and other non-traditional project structures.
 
@@ -151,7 +151,7 @@ Many repositories today contain:
 
 These folders often do not contain Maven, Gradle, or traditional NetBeans project metadata.
 
-Modernity Additional Projects makes these folders first-class citizens inside NetBeans.
+Modernity Generic Projects makes these folders first-class citizens inside NetBeans.
 
 ---
 
@@ -161,6 +161,7 @@ Tested with:
 
 ```text
 Apache NetBeans 30
+Apache NetBeans 31
 Java 21
 ```
 
@@ -168,7 +169,17 @@ Java 21
 
 ## Future Ideas
 
-- Follow github my projects
+- Follow my GitHub projects
+
+---
+
+## Author
+
+Kenan Erarslan
+
+```text
+kenan@enginaar.com
+```
 
 ---
 

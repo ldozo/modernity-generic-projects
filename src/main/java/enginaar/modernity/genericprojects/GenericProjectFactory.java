@@ -11,6 +11,21 @@ import org.openide.util.lookup.AbstractLookup;
 import org.openide.util.lookup.InstanceContent;
 import org.openide.util.lookup.ServiceProvider;
 
+/**
+ * {@link ProjectFactory} responsible for recognizing and loading generic
+ * folder projects.
+ * <p>
+ * A directory is recognized when any of the following conditions holds:
+ * <ul>
+ *   <li>it is a Git repository (contains a {@code .git} entry),</li>
+ *   <li>it contains a permanent {@code nbproject/project.xml} of type
+ *       {@code enginaar.modernity.genericprojects}</li>
+ *   <li>it contains the temporary marker file
+ *       {@code .netbeans-folder-project}.</li>
+ * </ul>
+ *
+ * @author Kenan Erarslan (kenan@enginaar.com)
+ */
 @ServiceProvider(service = ProjectFactory.class)
 public class GenericProjectFactory
         implements ProjectFactory {
@@ -18,9 +33,17 @@ public class GenericProjectFactory
     private static final Logger LOG = Logger.getLogger(GenericProjectFactory.class.getName());
 
     static {
-        LOG.log(Level.INFO, "AdditionalProjectFactory loaded - ServiceProvider registered");
+        LOG.log(Level.INFO, "GenericProjectFactory loaded - ServiceProvider registered");
     }
 
+    /**
+     * Decides whether the given directory should be treated as a generic
+     * folder project.
+     *
+     * @param projectDirectory the candidate directory
+     * @return {@code true} if the directory is a Git repository, a permanent
+     *         folder project, or a temporary folder project
+     */
     @Override
     public boolean isProject(FileObject projectDirectory) {
 
@@ -41,7 +64,8 @@ public class GenericProjectFactory
             } catch (IOException ex) {
                 LOG.log(Level.WARNING, "Failed to read project.xml: {0}", projectXml.getPath());
             }
-            if (content.contains("enginaar.modernity.additionalprojects")) {
+            if (content.contains(ProjectConverter.PROJECT_TYPE)
+                    || content.contains("enginaar.modernity.genericprojects")) {
                 LOG.log(Level.FINE, "Detected permanent folder project: {0}", projectDirectory.getPath());
                 return true;
             }
@@ -55,6 +79,15 @@ public class GenericProjectFactory
         return false;
     }
 
+    /**
+     * Loads a generic project for the given directory.
+     *
+     * @param projectDirectory the project directory
+     * @param state the project state supplied by the NetBeans project API
+     * @return the loaded project, or {@code null} if the directory is not a
+     *         generic folder project
+     * @throws IOException if the project cannot be loaded
+     */
     @Override
     public Project loadProject(FileObject projectDirectory, ProjectState state) throws IOException {
         if (!isProject(projectDirectory)) {

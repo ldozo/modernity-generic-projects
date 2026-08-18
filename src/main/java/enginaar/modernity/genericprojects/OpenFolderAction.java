@@ -19,13 +19,24 @@ import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.util.RequestProcessor;
 
+/**
+ * Opens an arbitrary folder as a NetBeans project.
+ * <p>
+ * Available under {@code File &rarr; Open Folder...}. The selected directory is
+ * opened directly when it is already a project (a Git repository, a permanent
+ * folder project, or another recognized project type). Otherwise the user can
+ * choose to open it as a temporary folder project or convert it into a
+ * permanent NetBeans project.
+ *
+ * @author Kenan Erarslan (kenan@enginaar.com)
+ */
 @ActionID(
         category = "File",
         id = "enginaar.modernity.genericprojects.OpenFolderAction"
 )
 @ActionRegistration(
         displayName = "Open Folder...",
-        iconBase = "enginaar/modernity/genericprojects/open-folder-icon_16.svg"        
+        iconBase = "enginaar/modernity/genericprojects/open-folder-icon_16.svg"
 )
 @ActionReference(
         path = "Menu/File",
@@ -41,6 +52,13 @@ public final class OpenFolderAction
         LOG.log(Level.INFO, "OpenFolderAction instantiated - Action registered");
     }
 
+    /**
+     * Invoked when the user selects "Open Folder...". Picks a directory and
+     * opens it as a project, or offers to open/convert it when it is not a
+     * recognized project.
+     *
+     * @param e the action event
+     */
     @Override
     public void actionPerformed(ActionEvent e) {
 

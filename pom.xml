@@ -11,8 +11,16 @@
     <version>1.0-SNAPSHOT</version>
     <packaging>nbm</packaging>
 
-    <name>Modernity Additional Projects</name>
+    <name>Modernity Generic Projects</name>
     <description>Open folders and Git repositories as NetBeans projects</description>
+
+    <developers>
+        <developer>
+            <id>kenan</id>
+            <name>Kenan Erarslan</name>
+            <email>kenan@enginaar.com</email>
+        </developer>
+    </developers>
 
     <properties>
         <netbeans.version>RELEASE310</netbeans.version>
@@ -131,6 +139,19 @@
                             ${project.build.outputDirectory}/META-INF/MANIFEST.MF
                         </manifestFile>
                     </archive>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>3.10.1</version>
+                <configuration>
+                    <release>21</release>
+                    <encoding>UTF-8</encoding>
+                    <doclint>none</doclint>
+                    <show>protected</show>
+                    <author>true</author>
                 </configuration>
             </plugin>
 
