@@ -4,6 +4,15 @@ Modernity Generic Projects brings a lightweight, folder-centric workflow to Apac
 
 The plugin allows Git repositories and arbitrary folders to be opened as projects, making NetBeans more convenient for working with configuration repositories, infrastructure code, YAML files, scripts, documentation, and other non-traditional project structures.
 
+## Minimum System Requirements
+
+```text
+Java 21 or later
+Apache NetBeans 30 or later
+```
+
+---
+
 ## Features
 
 ### Open Folder
