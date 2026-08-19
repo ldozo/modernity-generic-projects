@@ -1,14 +1,9 @@
 package enginaar.modernity.genericprojects;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.awt.Image;
-import javax.swing.Action;
 import javax.swing.Icon;
 import org.netbeans.spi.project.ui.LogicalViewProvider;
-import org.netbeans.spi.project.ui.support.CommonProjectActions;
 import org.openide.loaders.DataFolder;
 import org.openide.loaders.DataObject;
 import org.openide.loaders.DataObjectNotFoundException;
@@ -57,8 +52,7 @@ public class GenericProjectLogicalViewProvider
     public Node findPath(
             Node root,
             Object target) {
-        if (target instanceof FileObject) {
-            FileObject fo = (FileObject) target;
+        if (target instanceof FileObject fo) {
             try {
                 DataObject dobj = DataObject.find(fo);
                 Node targetNode = dobj.getNodeDelegate();
@@ -121,54 +115,6 @@ public class GenericProjectLogicalViewProvider
         private boolean isGit() {
             FileObject dir = project.getProjectDirectory();
             return dir != null && dir.getFileObject(".git") != null;
-        }
-
-        @Override
-        public Action[] getActions(boolean context) {
-            List<Action> actions = new ArrayList<Action>();
-            for (Action action : super.getActions(context)) {
-                if (action != null) {
-                    String className = action.getClass().getName();
-                    boolean plainDelete = className.startsWith("org.openide.actions.DeleteAction")
-                            || className.startsWith("org.openide.actions.RenameAction");
-                    boolean delegate = "org.openide.awt.GeneralAction$DelegateAction".equals(className);
-                    if (plainDelete || delegate) {
-                        Object name = action.getValue(Action.NAME);
-                        if (plainDelete) {
-                            continue;
-                        }
-                        if (name != null) {
-                            String n = name.toString();
-                            if (n.startsWith("&Delete") || n.startsWith("&Rename")) {
-                                continue;
-                            }
-                        }
-                    }
-                }
-                actions.add(action);
-            }
-            actions.add(null);
-            actions.add(CommonProjectActions.renameProjectAction());
-            actions.add(CommonProjectActions.deleteProjectAction());
-            actions.add(CommonProjectActions.closeProjectAction());
-            Action[] result = actions.toArray(new Action[actions.size()]);
-            StringBuilder f = new StringBuilder("GFINAL ctx=" + context + " node=" + getDisplayName() + " n=" + result.length + " [");
-            for (int i = 0; i < result.length; i++) {
-                Action a = result[i];
-                if (a == null) {
-                    f.append(i).append("=null;");
-                } else {
-                    f.append(i).append('=').append(a.getClass().getSimpleName());
-                    Object name = a.getValue(Action.NAME);
-                    if (name != null) {
-                        f.append("('").append(name).append("')");
-                    }
-                    f.append(';');
-                }
-            }
-            f.append(']');
-            LOG.log(Level.INFO, f.toString());
-            return result;
         }
     }
 }

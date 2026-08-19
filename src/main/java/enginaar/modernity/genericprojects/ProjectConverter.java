@@ -23,7 +23,7 @@ public final class ProjectConverter {
     private static final Logger LOG = Logger.getLogger(ProjectConverter.class.getName());
 
     /** The project type identifier written to {@code project.xml}. */
-    public static final String PROJECT_TYPE = "enginaar.modernity.genericprojects";
+    public static final String PROJECT_TYPE = "enginaar.modernity.genericproject";
 
     private ProjectConverter() {
     }
@@ -50,12 +50,13 @@ public final class ProjectConverter {
             LOG.log(Level.FINE, "Created project.xml: {0}", projectXml.getPath());
         }
 
-        String xml = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
-                + "<project>\n"
-                + "    <type>\n"
-                + "        " + PROJECT_TYPE + "\n"
-                + "    </type>\n"
-                + "</project>\n";
+        String xml = String.format("""
+                     <?xml version="1.0" encoding="UTF-8"?>
+                     <project>
+                        <type>
+                            %s
+                        </type> 
+                     </project>""", PROJECT_TYPE);
 
         try (OutputStream out = projectXml.getOutputStream()) {
             out.write(xml.getBytes(StandardCharsets.UTF_8));
