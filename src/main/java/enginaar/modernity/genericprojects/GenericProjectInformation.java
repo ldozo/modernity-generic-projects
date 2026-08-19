@@ -10,9 +10,9 @@ import org.openide.util.ImageUtilities;
 /**
  * {@link ProjectInformation} implementation for {@link GenericProject}.
  * <p>
- * The display name is derived from the wrapped directory name. The icon is
- * chosen from the folder content: Git repositories use the Git repository
- * icon, everything else falls back to the generic NetBeans project icon.
+ * The display name is derived from the wrapped directory name. Git
+ * repositories use the Git repository icon, all other generic projects use
+ * the enginar logo as their custom project icon.
  *
  * @author Kenan Erarslan (kenan@enginaar.com)
  */
@@ -42,8 +42,8 @@ public class GenericProjectInformation implements ProjectInformation {
 
     /**
      * Resolves the icon for the project. Git repositories get the Git
-     * repository icon; all other generic projects get the standard project
-     * icon.
+     * repository icon; all other generic projects use the enginar logo as
+     * their custom project icon.
      *
      * @return the resolved icon, or {@code null} if no icon is available
      */
@@ -56,6 +56,13 @@ public class GenericProjectInformation implements ProjectInformation {
             if (gitIcon != null) {
                 return gitIcon;
             }
+        }
+
+        Icon logo = ImageUtilities.loadImageIcon(
+                "enginaar/modernity/genericprojects/enginar_logo.svg",
+                false);
+        if (logo != null) {
+            return logo;
         }
 
         return ImageUtilities.loadImageIcon(

@@ -1,5 +1,6 @@
 package enginaar.modernity.genericprojects;
 
+import java.util.Set;
 import java.util.logging.Logger;
 import java.awt.Image;
 import javax.swing.Icon;
@@ -19,8 +20,10 @@ import org.openide.util.lookup.ProxyLookup;
  * <p>
  * The logical view delegates to the standard {@link DataFolder} node of the
  * wrapped directory, so the project tree simply reflects the folder contents
- * using NetBeans' default data-object nodes. {@code findPath} locates the node
- * corresponding to a given target file.
+ * using NetBeans' default data-object nodes. Internal project files
+ * ({@code nbproject}, {@code .netbeans-folder-project}, {@code .git}) are
+ * filtered out of the tree. {@code findPath} locates the node corresponding
+ * to a given target file.
  *
  * @author Kenan Erarslan (kenan@enginaar.com)
  */
@@ -28,6 +31,11 @@ public class GenericProjectLogicalViewProvider
         implements LogicalViewProvider {
 
     private static final Logger LOG = Logger.getLogger(GenericProjectLogicalViewProvider.class.getName());
+
+    private static final Set<String> HIDDEN_NAMES = Set.of(
+            "nbproject",
+            ".netbeans-folder-project",
+            ".git");
 
     private final GenericProject project;
 
@@ -78,14 +86,24 @@ public class GenericProjectLogicalViewProvider
         return null;
     }
 
+    private static boolean isHidden(Node node) {
+        return HIDDEN_NAMES.contains(node.getName());
+    }
+
+    /**
+     * Root node of the project tree. Git repositories show the Git repository
+     * icon, all other generic projects show the enginar logo. The generic
+     * project is exposed in the lookup.
+     */
     private static final class ProjectNode extends FilterNode {
 
         private static final String GIT_ICON = "enginaar/modernity/genericprojects/git-icon_16.svg";
+        private static final String ENGINAR_LOGO = "enginaar/modernity/genericprojects/enginar_logo.svg";
 
         private final GenericProject project;
 
         ProjectNode(Node original, GenericProject project) {
-            super(original, new FilterNode.Children(original),
+            super(original, new FilteredChildren(original),
                     new ProxyLookup(Lookups.singleton(project), original.getLookup()));
             this.project = project;
         }
@@ -98,6 +116,10 @@ public class GenericProjectLogicalViewProvider
                     return ImageUtilities.icon2Image(icon);
                 }
             }
+            Icon icon = ImageUtilities.loadImageIcon(ENGINAR_LOGO, false);
+            if (icon != null) {
+                return ImageUtilities.icon2Image(icon);
+            }
             return super.getIcon(type);
         }
 
@@ -109,12 +131,45 @@ public class GenericProjectLogicalViewProvider
                     return ImageUtilities.icon2Image(icon);
                 }
             }
+            Icon icon = ImageUtilities.loadImageIcon(ENGINAR_LOGO, false);
+            if (icon != null) {
+                return ImageUtilities.icon2Image(icon);
+            }
             return super.getOpenedIcon(type);
         }
 
         private boolean isGit() {
             FileObject dir = project.getProjectDirectory();
             return dir != null && dir.getFileObject(".git") != null;
+        }
+    }
+
+    /**
+     * Regular tree node for a visible child. Keeps the default file/folder
+     * icons while continuing the filtering on its own children.
+     */
+    private static final class ChildNode extends FilterNode {
+
+        ChildNode(Node original) {
+            super(original, new FilteredChildren(original));
+        }
+    }
+
+    /**
+     * Children that drop the internal project files from the tree.
+     */
+    private static final class FilteredChildren extends FilterNode.Children {
+
+        FilteredChildren(Node original) {
+            super(original);
+        }
+
+        @Override
+        protected Node[] createNodes(Node key) {
+            if (isHidden(key)) {
+                return new Node[0];
+            }
+            return new Node[]{new ChildNode(key)};
         }
     }
 }
