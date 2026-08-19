@@ -1,6 +1,6 @@
 # Modernity Generic Projects
 
-![Enginar Logo](src/main/resources/enginaar/modernity/genericprojects/enginar_logo.svg)
+[ldozo/modernity-additional-projects](https://github.com/ldozo/modernity-generic-projects)
 
 Modernity Generic Projects brings a lightweight, folder-centric workflow to Apache NetBeans.
 
@@ -30,9 +30,9 @@ Once recognised, the folder is wrapped in a lightweight `GenericProject` whose s
 - **Git repositories** show the Git repository icon:  
   ![Git Icon](src/main/resources/enginaar/modernity/genericprojects/git-icon_16.svg)
 
-- **All other generic projects** (temporary folder projects and permanent converted projects) show the enginar logo.
+- **All other generic projects** (temporary folder projects and permanent converted projects) show NetBeans' normal folder icon.
 
-- The icon is resolved by `GenericProjectInformation` and the project tree root node; when the icon resources are unavailable a default project icon is used as a fallback.
+- The icon is resolved by `GenericProjectInformation` and the project tree root node; when the Git icon resource is unavailable the normal folder icon is used as a fallback.
 
 ### Project Tree Filtering
 
@@ -205,7 +205,6 @@ The tests cover:
 - Project recognition and loading (`GenericProjectFactoryTest`)
 - Project metadata and data files (`GenericProjectOperationsTest`)
 - Action provider commands (`GenericProjectActionProviderTest`)
-- Root node naming (`GenericProjectRootNodeTest`)
 - Project information, icons and resources (`GenericProjectTest`)
 - Logical view tree filtering and path resolution (`GenericProjectLogicalViewProviderTest`)
 
@@ -240,9 +239,9 @@ Java 21
 
 ---
 
-## Future Ideas
+## Links
 
-- Follow my GitHub projects
+- GitHub: [ldozo/modernity-additional-projects](https://github.com/ldozo/modernity-generic-projects)
 
 ---
 

@@ -15,7 +15,7 @@ public class ProjectConverterTest extends AbstractGenericProjectTest {
 
     @Test
     public void constantMatchesFactoryProjectType() {
-        assertEquals("enginaar.modernity.genericproject", ProjectConverter.PROJECT_TYPE);
+        assertEquals("enginaar.modernity.genericprojects", ProjectConverter.PROJECT_TYPE);
         assertEquals(ProjectConverter.PROJECT_TYPE, GenericProjectFactory.PROJECT_TYPE);
     }
 

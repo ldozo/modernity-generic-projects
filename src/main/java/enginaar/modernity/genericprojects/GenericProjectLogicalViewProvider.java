@@ -85,13 +85,10 @@ public class GenericProjectLogicalViewProvider
 
     /**
      * Root node of the project tree. Git repositories show the Git repository
-     * icon, all other generic projects show the enginar logo. The generic
-     * project is exposed in the lookup.
+     * icon, all other generic projects keep the normal folder icon of the
+     * wrapped directory. The generic project is exposed in the lookup.
      */
     private static final class ProjectNode extends FilterNode {
-
-        private static final String GIT_ICON = "enginaar/modernity/genericprojects/git-icon_16.svg";
-        private static final String ENGINAR_LOGO = "enginaar/modernity/genericprojects/enginar_logo.svg";
 
         private final GenericProject project;
 
@@ -104,14 +101,10 @@ public class GenericProjectLogicalViewProvider
         @Override
         public Image getIcon(int type) {
             if (isGit()) {
-                Icon icon = ImageUtilities.loadImageIcon(GIT_ICON, false);
+                Icon icon = GenericProjectIcons.gitIcon();
                 if (icon != null) {
                     return ImageUtilities.icon2Image(icon);
                 }
-            }
-            Icon icon = ImageUtilities.loadImageIcon(ENGINAR_LOGO, false);
-            if (icon != null) {
-                return ImageUtilities.icon2Image(icon);
             }
             return super.getIcon(type);
         }
@@ -119,14 +112,10 @@ public class GenericProjectLogicalViewProvider
         @Override
         public Image getOpenedIcon(int type) {
             if (isGit()) {
-                Icon icon = ImageUtilities.loadImageIcon(GIT_ICON, false);
+                Icon icon = GenericProjectIcons.gitIcon();
                 if (icon != null) {
                     return ImageUtilities.icon2Image(icon);
                 }
-            }
-            Icon icon = ImageUtilities.loadImageIcon(ENGINAR_LOGO, false);
-            if (icon != null) {
-                return ImageUtilities.icon2Image(icon);
             }
             return super.getOpenedIcon(type);
         }

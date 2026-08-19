@@ -54,22 +54,13 @@ public class GenericProjectTest extends AbstractGenericProjectTest {
     }
 
     @Test
-    public void iconResourceResolutionChoosesGitIconForGitRepositories() {
+    public void gitIconResourceChosenForGitRepositories() {
         assertEquals("enginaar/modernity/genericprojects/git-icon_16.svg",
-                GenericProjectInformation.resolveIconResource(true));
-    }
-
-    @Test
-    public void iconResourceResolutionChoosesEnginarLogoForFolders() {
-        assertEquals("enginaar/modernity/genericprojects/enginar_logo.svg",
-                GenericProjectInformation.resolveIconResource(false));
+                GenericProjectIcons.GIT_ICON);
     }
 
     @Test
     public void iconResourcesExistOnClasspath() {
-        assertNotNull("enginar logo resource missing",
-                getClass().getResourceAsStream(
-                        "enginar_logo.svg"));
         assertNotNull("git icon resource missing",
                 getClass().getResourceAsStream(
                         "git-icon_16.svg"));

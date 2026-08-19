@@ -99,24 +99,12 @@ public final class OpenFolderAction
                 final int choice = showOptionDialog();
 
                 if (choice == 0) {
-                    LOG.log(Level.INFO, "Creating temporary folder project: {0}", folder.getPath());
-                    FolderProjectMarker.create(folder);
-                    ProjectManager.getDefault().clearNonProjectCache();
-                    Project newProject = ProjectManager.getDefault().findProject(folder);
-                    if (newProject != null) {
-                        openProject(newProject);
-                    }
+                    openAsFolderProject(folder);
                     return;
                 }
 
                 if (choice == 1) {
-                    LOG.log(Level.INFO, "Converting to permanent project: {0}", folder.getPath());
-                    ProjectConverter.convertToProject(folder);
-                    ProjectManager.getDefault().clearNonProjectCache();
-                    Project newProject = ProjectManager.getDefault().findProject(folder);
-                    if (newProject != null) {
-                        openProject(newProject);
-                    }
+                    convertAndOpen(folder);
                 }
 
             } catch (IOException | IllegalArgumentException ex) {
@@ -130,6 +118,26 @@ public final class OpenFolderAction
                 });
             }
         });
+    }
+
+    private void openAsFolderProject(FileObject folder) throws IOException {
+        LOG.log(Level.INFO, "Creating temporary folder project: {0}", folder.getPath());
+        FolderProjectMarker.create(folder);
+        openReevaluatedProject(folder);
+    }
+
+    private void convertAndOpen(FileObject folder) throws IOException {
+        LOG.log(Level.INFO, "Converting to permanent project: {0}", folder.getPath());
+        ProjectConverter.convertToProject(folder);
+        openReevaluatedProject(folder);
+    }
+
+    private void openReevaluatedProject(FileObject folder) throws IOException {
+        ProjectUtils.clearNonProjectCache();
+        Project newProject = ProjectManager.getDefault().findProject(folder);
+        if (newProject != null) {
+            openProject(newProject);
+        }
     }
 
     private void openProject(Project project) {

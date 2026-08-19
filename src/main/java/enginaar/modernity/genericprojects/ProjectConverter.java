@@ -5,7 +5,6 @@ import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.netbeans.api.project.ProjectManager;
 import org.openide.filesystems.FileObject;
 
 /**
@@ -23,7 +22,7 @@ public final class ProjectConverter {
     private static final Logger LOG = Logger.getLogger(ProjectConverter.class.getName());
 
     /** The project type identifier written to {@code project.xml}. */
-    public static final String PROJECT_TYPE = "enginaar.modernity.genericproject";
+    public static final String PROJECT_TYPE = "enginaar.modernity.genericprojects";
 
     private ProjectConverter() {
     }
@@ -61,23 +60,7 @@ public final class ProjectConverter {
         try (OutputStream out = projectXml.getOutputStream()) {
             out.write(xml.getBytes(StandardCharsets.UTF_8));
         }
-        clearNonProjectCache();
+        ProjectUtils.clearNonProjectCache();
         LOG.log(Level.INFO, "Converted to permanent project: {0}", folder.getPath());
-    }
-
-    /**
-     * Asks NetBeans to re-evaluate project recognition so the converted folder
-     * is picked up immediately. When the project API is not available (for
-     * example in plain unit tests) the call is skipped.
-     */
-    private static void clearNonProjectCache() {
-        try {
-            ProjectManager manager = ProjectManager.getDefault();
-            if (manager != null) {
-                manager.clearNonProjectCache();
-            }
-        } catch (Throwable t) {
-            LOG.log(Level.FINE, "ProjectManager unavailable, skipping cache clear", t);
-        }
     }
 }

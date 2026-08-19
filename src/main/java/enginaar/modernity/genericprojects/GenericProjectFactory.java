@@ -98,19 +98,7 @@ public class GenericProjectFactory
 
         LOG.log(Level.INFO, "Loading project: {0}", projectDirectory.getPath());
 
-        InstanceContent content = new InstanceContent();
-        AbstractLookup lookup = new AbstractLookup(content);
-
-        GenericProject project = new GenericProject(projectDirectory, lookup);
-
-        content.add(project);
-        content.add(new GenericProjectInformation(project));
-        content.add(new GenericProjectOpenedHook(project));
-        content.add(new GenericProjectLogicalViewProvider(project));
-        content.add(new GenericProjectOperations(project));
-        content.add(new GenericProjectActionProvider(project));
-
-        return project;
+        return createProject(projectDirectory);
     }
 
     @Override
@@ -119,6 +107,10 @@ public class GenericProjectFactory
     }
 
     public static GenericProject createTransientProject(FileObject folder) {
+        return createProject(folder);
+    }
+
+    private static GenericProject createProject(FileObject folder) {
         InstanceContent content = new InstanceContent();
         AbstractLookup lookup = new AbstractLookup(content);
 
