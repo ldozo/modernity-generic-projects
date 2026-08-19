@@ -32,6 +32,9 @@ public class GenericProjectFactory
 
     private static final Logger LOG = Logger.getLogger(GenericProjectFactory.class.getName());
 
+    /** The project type identifier written to {@code nbproject/project.xml}. */
+    public static final String PROJECT_TYPE = ProjectConverter.PROJECT_TYPE;
+
     static {
         LOG.log(Level.INFO, "GenericProjectFactory loaded - ServiceProvider registered");
     }
@@ -64,8 +67,7 @@ public class GenericProjectFactory
             } catch (IOException ex) {
                 LOG.log(Level.WARNING, "Failed to read project.xml: {0}", projectXml.getPath());
             }
-            if (content.contains(ProjectConverter.PROJECT_TYPE)
-                    || content.contains("enginaar.modernity.genericprojects")) {
+            if (content.contains(PROJECT_TYPE)) {
                 LOG.log(Level.FINE, "Detected permanent folder project: {0}", projectDirectory.getPath());
                 return true;
             }

@@ -18,6 +18,9 @@ import org.openide.util.ImageUtilities;
  */
 public class GenericProjectInformation implements ProjectInformation {
 
+    private static final String GIT_ICON = "enginaar/modernity/genericprojects/git-icon_16.svg";
+    private static final String ENGINAR_LOGO = "enginaar/modernity/genericprojects/enginar_logo.svg";
+
     private final GenericProject project;
     private final PropertyChangeSupport pcs = new PropertyChangeSupport(this);
 
@@ -28,6 +31,17 @@ public class GenericProjectInformation implements ProjectInformation {
      */
     public GenericProjectInformation(GenericProject project) {
         this.project = project;
+    }
+
+    /**
+     * Resolves the icon resource for a project. Git repositories use the Git
+     * repository icon, all other generic projects use the enginar logo.
+     *
+     * @param git whether the project is a Git repository
+     * @return the icon resource path
+     */
+    static String resolveIconResource(boolean git) {
+        return git ? GIT_ICON : ENGINAR_LOGO;
     }
 
     @Override
@@ -49,20 +63,10 @@ public class GenericProjectInformation implements ProjectInformation {
      */
     @Override
     public Icon getIcon() {
-        if (isGit()) {
-            Icon gitIcon = ImageUtilities.loadImageIcon(
-                    "enginaar/modernity/genericprojects/git-icon_16.svg",
-                    false);
-            if (gitIcon != null) {
-                return gitIcon;
-            }
-        }
-
-        Icon logo = ImageUtilities.loadImageIcon(
-                "enginaar/modernity/genericprojects/enginar_logo.svg",
-                false);
-        if (logo != null) {
-            return logo;
+        String resource = resolveIconResource(isGit());
+        Icon icon = ImageUtilities.loadImageIcon(resource, false);
+        if (icon != null) {
+            return icon;
         }
 
         return ImageUtilities.loadImageIcon(

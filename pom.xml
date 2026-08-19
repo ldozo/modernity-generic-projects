@@ -150,6 +150,17 @@
 
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <configuration>
+                    <systemPropertyVariables>
+                        <org.openide.util.Lookup>enginaar.modernity.genericprojects.TestLookup</org.openide.util.Lookup>
+                    </systemPropertyVariables>
+                </configuration>
+                <version>2.15</version>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
                 <version>3.10.1</version>
                 <configuration>

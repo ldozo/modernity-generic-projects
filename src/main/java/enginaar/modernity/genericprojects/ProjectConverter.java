@@ -61,7 +61,23 @@ public final class ProjectConverter {
         try (OutputStream out = projectXml.getOutputStream()) {
             out.write(xml.getBytes(StandardCharsets.UTF_8));
         }
-        ProjectManager.getDefault().clearNonProjectCache();
+        clearNonProjectCache();
         LOG.log(Level.INFO, "Converted to permanent project: {0}", folder.getPath());
+    }
+
+    /**
+     * Asks NetBeans to re-evaluate project recognition so the converted folder
+     * is picked up immediately. When the project API is not available (for
+     * example in plain unit tests) the call is skipped.
+     */
+    private static void clearNonProjectCache() {
+        try {
+            ProjectManager manager = ProjectManager.getDefault();
+            if (manager != null) {
+                manager.clearNonProjectCache();
+            }
+        } catch (Throwable t) {
+            LOG.log(Level.FINE, "ProjectManager unavailable, skipping cache clear", t);
+        }
     }
 }

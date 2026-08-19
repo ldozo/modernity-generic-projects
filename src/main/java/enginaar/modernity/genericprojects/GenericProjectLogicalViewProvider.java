@@ -6,8 +6,6 @@ import java.awt.Image;
 import javax.swing.Icon;
 import org.netbeans.spi.project.ui.LogicalViewProvider;
 import org.openide.loaders.DataFolder;
-import org.openide.loaders.DataObject;
-import org.openide.loaders.DataObjectNotFoundException;
 import org.openide.nodes.FilterNode;
 import org.openide.nodes.Node;
 import org.openide.filesystems.FileObject;
@@ -61,19 +59,14 @@ public class GenericProjectLogicalViewProvider
             Node root,
             Object target) {
         if (target instanceof FileObject fo) {
-            try {
-                DataObject dobj = DataObject.find(fo);
-                Node targetNode = dobj.getNodeDelegate();
-                return findNode(root, targetNode);
-            } catch (DataObjectNotFoundException ex) {
-                return null;
-            }
+            return findNode(root, fo);
         }
         return null;
     }
 
-    private Node findNode(Node root, Node target) {
-        if (root == target) {
+    private Node findNode(Node root, FileObject target) {
+        FileObject file = root.getLookup().lookup(FileObject.class);
+        if (file != null && file.equals(target)) {
             return root;
         }
         Node[] children = root.getChildren().getNodes();

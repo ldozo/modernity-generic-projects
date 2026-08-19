@@ -1,5 +1,7 @@
 # Modernity Generic Projects
 
+![Enginar Logo](src/main/resources/enginaar/modernity/genericprojects/enginar_logo.svg)
+
 Modernity Generic Projects brings a lightweight, folder-centric workflow to Apache NetBeans.
 
 The plugin allows Git repositories and arbitrary folders to be opened as projects, making NetBeans more convenient for working with configuration repositories, infrastructure code, YAML files, scripts, documentation, and other non-traditional project structures.
@@ -10,6 +12,39 @@ The plugin allows Git repositories and arbitrary folders to be opened as project
 Java 21 or later
 Apache NetBeans 30 or later
 ```
+
+---
+
+## How It Works
+
+The plugin registers a `ProjectFactory` (`GenericProjectFactory`) that recognises a directory as a project when any of the following is true:
+
+- It is a Git repository (contains a `.git` entry).
+- It contains a permanent `nbproject/project.xml` whose type is `enginaar.modernity.genericprojects`.
+- It contains the temporary marker file `.netbeans-folder-project`.
+
+Once recognised, the folder is wrapped in a lightweight `GenericProject` whose services (information, logical view, operations, actions) are provided through the project lookup.
+
+### Project Icons
+
+- **Git repositories** show the Git repository icon:  
+  ![Git Icon](src/main/resources/enginaar/modernity/genericprojects/git-icon_16.svg)
+
+- **All other generic projects** (temporary folder projects and permanent converted projects) show the enginar logo.
+
+- The icon is resolved by `GenericProjectInformation` and the project tree root node; when the icon resources are unavailable a default project icon is used as a fallback.
+
+### Project Tree Filtering
+
+The logical view delegates to the standard folder node of the wrapped directory, so the tree reflects the folder contents using NetBeans' default data-object nodes. Internal bookkeeping entries are hidden from the tree:
+
+```text
+nbproject
+.netbeans-folder-project
+.git
+```
+
+The filtering is applied recursively at every level via `GenericProjectLogicalViewProvider.FilteredChildren`.
 
 ---
 
@@ -144,6 +179,35 @@ docs
 ```
 
 Opened as a regular project.
+
+---
+
+## Development
+
+### Building
+
+```text
+mvn clean package
+```
+
+### Running the Tests
+
+The project includes a plain JUnit test suite that runs without the full NetBeans module system. The test setup injects a mock `ProjectManagerImplementation` into the global lookup through the `org.openide.util.Lookup` system property configured in `pom.xml`.
+
+```text
+mvn test
+```
+
+The tests cover:
+
+- Folder marker creation, removal and idempotency (`FolderProjectMarkerTest`)
+- Project conversion to a permanent project (`ProjectConverterTest`)
+- Project recognition and loading (`GenericProjectFactoryTest`)
+- Project metadata and data files (`GenericProjectOperationsTest`)
+- Action provider commands (`GenericProjectActionProviderTest`)
+- Root node naming (`GenericProjectRootNodeTest`)
+- Project information, icons and resources (`GenericProjectTest`)
+- Logical view tree filtering and path resolution (`GenericProjectLogicalViewProviderTest`)
 
 ---
 
